@@ -5,87 +5,92 @@
 #                                                     +:+ +:+         +:+      #
 #    By: lleodev <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/10/11 09:58:36 by lleodev           #+#    #+#              #
-#    Updated: 2024/10/11 10:02:27 by lleodev          ###   ########.fr        #
+#    Created: 2024/05/16 11:51:34 by lleodev           #+#    #+#              #
+#    Updated: 2024/05/23 16:25:54 by lleodev          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
+NAME = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra  -g
-INCLUDES = -I./includes/ -I./libs/libft/
+CFLAGS = -Wall -Wextra -Werror
 
-LIB = ./libs/libft/libft.a
-COMPLIB = cd libs/libft/ && make
+SRCS = 	ft_isalpha.c	\
+	ft_isdigit.c 		\
+	ft_isalnum.c 		\
+	ft_isascii.c 		\
+	ft_isprint.c 		\
+	ft_strlen.c 		\
+	ft_memset.c 		\
+	ft_bzero.c			\
+	ft_memcpy.c 		\
+	ft_memmove.c 		\
+	ft_strlcpy.c 		\
+	ft_strlcat.c 		\
+	ft_toupper.c 		\
+	ft_tolower.c 		\
+	ft_strchr.c 		\
+	ft_strrchr.c 		\
+	ft_strncmp.c 		\
+	ft_memchr.c 		\
+	ft_memcmp.c 		\
+	ft_strnstr.c 		\
+	ft_atoi.c 			\
+	ft_calloc.c 		\
+	ft_strdup.c 		\
+	ft_substr.c 		\
+	ft_strjoin.c 		\
+	ft_strtrim.c 		\
+	ft_split.c 		\
+	ft_itoa.c 		\
+	ft_strmapi.c 		\
+	ft_striteri.c 		\
+	ft_putchar_fd.c 	\
+	ft_putstr_fd.c 		\
+	ft_putendl_fd.c 	\
+	get_next_line.c		\
+	get_next_line_utils.c	\
+	ft_putnbr_fd.c
 
-SRC =	./src/builtins/ft_echo.c		\
-	./src/builtins/ft_echo_one.c		\
-	./src/builtins/ft_echo_two.c		\
-	./src/utils/ft_split_echo.c      \
-	./src/builtins/ft_unset.c		\
-	./src/builtins/ft_builtins.c		\
-	./src/builtins/ft_export.c		\
-	./src/builtins/ft_check_builtins.c	\
-	./src/quotes_handler/handle_quote.c	\
-	./src/utils/utils.c			\
-	./src/utils/ft_comands.c		\
-	./src/utils/ft_aux.c			\
-	./src/utils/ft_aux1.c			\
-	./src/utils/env.c			\
-	./src/signal_handler/ft_takesignal.c	\
-	./src/redirects/redirect_stdin.c	\
-	./src/child_process/path.c		\
-	./src/child_process/exec_bin.c		\
-	./src/child_process/child_process.c	\
-	./src/minishell.c			\
-	./src/display_cli.c
-
-OBJ = $(SRC:./src/%.c=obj/%.o)
 
 ################################COLORS######################################
 
 WHITE_TEXT = \033[1;37m
-GREEN_TEXT = \033[1;32m
-RED_TEXT = \033[1;31m
-ORANGE_TEXT = \033[1;33m
-BLUE_TEXT = \033[1;34m
+GREEN_TEXT = \033[0;32m
+RED_TEXT = \033[0;31m
+ORANGE_TEXT = \033[0;33m
+BLUE_TEXT = \033[0;34m
 GREEN_BG = \033[42m
 RED_BG = \033[41m
 ORANGE_BG = \033[43m
 BLUE_BG = \033[44m
 RESET = \033[0m
-date= date
+
+OBJ = $(SRCS:.c=.o)
 
 all: $(NAME)
+	@echo "$(GREEN_BG) Libft ready! $(RESET)"
 	make lleodev_header
-	@echo "$(GREEN_TEXT)>_ Project ready! $(RESET)"
-	@echo "$(ORANGE_TEXT)>_ $(NAME) is now avaliable try run ./$(NAME)$(RESET)"
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	make lleodev_header
+	@echo "$(BLUE_BG)compiling Libft... $(RESET)"
 
-$(NAME) : $(OBJ) $(LIB)
-	$(CC) $(OBJ) -o $(NAME) $(LIB) -lreadline
-	make lleodev_header
-	@echo "$(GREEN_BG)All libs Compiled! $(RESET)"
+$(NAME): $(OBJ) 
+	@ar rc $(NAME) $(OBJ)
+	@ranlib $(NAME)
 
-obj/%.o: src/%.c
-	clear
-	@mkdir -p $(dir $@)
+clean:
+	@echo "$(ORANGE_BG)Cleaning $()Libft sourses $(RESET)"
+	@/bin/rm -f $(OBJ)
 	make lleodev_header
-	@echo "$(BLUE_BG)compiling $(NAME) sources...$(RESET)"
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@echo "$(RED_BG) $()Libft cleaned $(RESET)"
 
-$(LIB):
-	$(COMPLIB)
-	
-clean: lleodev_header
-	@rm -rf ./obj
-	@cd libs/libft && make clean
+fclean: clean
 	make lleodev_header
-	@echo "$(RED_BG)All objects cleaned! $(RESET)"
-fclean: clean lleodev_header
-	@rm -rf $(NAME)
-	@cd libs/libft && make fclean
-	make lleodev_header
-	@echo "$(RED_BG)Project cleaned! $(RESET)"
+	@echo "$(RED_BG) $()Libft cleaned $(RESET)"
+	@/bin/rm -f $(NAME)
+
+re: fclean all
 
 lleodev_header:
 	@clear
@@ -106,4 +111,4 @@ lleodev_header:
 	@echo "$(RESET)"
 	
 	
-re: fclean all
+.PHONY: all bonus clean fclean re
